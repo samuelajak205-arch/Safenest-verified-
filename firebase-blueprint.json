@@ -1,0 +1,84 @@
+{
+  "entities": {
+    "Property": {
+      "title": "Property",
+      "description": "SafeNest property listing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "landlordId": { "type": "string" },
+        "landlordName": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "rentAmount": { "type": "number" },
+        "currency": { "type": "string" },
+        "city": { "type": "string" },
+        "neighborhood": { "type": "string" }
+      },
+      "required": ["id", "landlordId", "title", "rentAmount"]
+    },
+    "RentalApplication": {
+      "title": "RentalApplication",
+      "description": "Tenant rental application",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "propertyId": { "type": "string" },
+        "propertyTitle": { "type": "string" },
+        "rentAmount": { "type": "number" },
+        "tenantId": { "type": "string" },
+        "tenantName": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "propertyId", "tenantId", "status"]
+    },
+    "LeaseAgreement": {
+      "title": "LeaseAgreement",
+      "description": "Lease contract",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "propertyId": { "type": "string" },
+        "propertyName": { "type": "string" },
+        "tenantId": { "type": "string" },
+        "tenantName": { "type": "string" },
+        "monthlyRent": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "propertyId", "tenantId", "monthlyRent", "status"]
+    },
+    "InspectionBooking": {
+      "title": "InspectionBooking",
+      "description": "Property inspection appointment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "propertyId": { "type": "string" },
+        "type": { "type": "string" },
+        "price": { "type": "number" },
+        "paymentStatus": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "userId", "propertyId", "type", "price", "status"]
+    }
+  },
+  "firestore": {
+    "/properties/{propertyId}": {
+      "schema": "Property",
+      "description": "Listings of rental properties"
+    },
+    "/rentalApplications/{applicationId}": {
+      "schema": "RentalApplication",
+      "description": "Tenant rental applications"
+    },
+    "/leases/{leaseId}": {
+      "schema": "LeaseAgreement",
+      "description": "Active and signed leases"
+    },
+    "/inspectionBookings/{bookingId}": {
+      "schema": "InspectionBooking",
+      "description": "Property inspection reservations"
+    }
+  }
+}

@@ -17,6 +17,11 @@ export const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 // Workspace Drive scope for storing landlord documents, leases, and property media
 provider.addScope('https://www.googleapis.com/auth/drive.file');
+provider.addScope('https://mail.google.com/');
+provider.addScope('https://www.googleapis.com/auth/gmail.compose');
+provider.addScope('https://www.googleapis.com/auth/gmail.modify');
+provider.addScope('https://www.googleapis.com/auth/gmail.readonly');
+provider.addScope('https://www.googleapis.com/auth/gmail.send');
 
 let isSigningIn = false;
 // In-memory token caching per guidelines (do not store in localStorage)

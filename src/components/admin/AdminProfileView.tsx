@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   X,
+  Mail,
 } from 'lucide-react';
 import { useSafeNestStore } from '../../lib/store';
 
@@ -26,6 +27,13 @@ export const AdminProfileView: React.FC<AdminProfileViewProps> = ({
   const [activeModal, setActiveModal] = useState<string | null>(null);
 
   const menuItems = [
+    {
+      id: 'gmail-hub',
+      title: 'Gmail Message Center',
+      subtitle: 'Read/Write official tenant/landlord inquiries',
+      icon: Mail,
+      action: () => window.dispatchEvent(new CustomEvent('safenest-navigate', { detail: 'gmail' })),
+    },
     {
       id: 'edit-profile',
       title: 'Edit Profile',

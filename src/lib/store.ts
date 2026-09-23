@@ -448,6 +448,9 @@ export class SafeNestStore {
     this.buildingStaff = this.load(STORAGE_KEYS.BUILDING_STAFF, INITIAL_BUILDING_STAFF);
     this.buildingChatMessages = this.load(STORAGE_KEYS.BUILDING_CHAT_MESSAGES, INITIAL_BUILDING_CHAT_MESSAGES);
     this.buildingChatAnnouncements = this.load(STORAGE_KEYS.BUILDING_CHAT_ANNOUNCEMENTS, INITIAL_BUILDING_CHAT_ANNOUNCEMENTS);
+
+    // Pull real-time data from Firestore in the background on boot
+    this.pullFromFirestore();
   }
 
   public static getInstance(): SafeNestStore {
@@ -472,8 +475,124 @@ export class SafeNestStore {
   private save<T>(key: string, value: T): void {
     try {
       localStorage.setItem(key, JSON.stringify(value));
+      // Sync mutations to Firestore in the background
+      this.syncToFirestore(key, value);
     } catch (e) {
       console.warn(`Error saving key ${key}:`, e);
+    }
+  }
+
+  private async syncToFirestore(key: string, value: any): Promise<void> {
+    try {
+      const { db } = await import('./firebase');
+      const { doc, setDoc } = await import('firebase/firestore');
+
+      if (key === STORAGE_KEYS.PROPERTIES && Array.isArray(value)) {
+        for (const item of value) {
+          if (item && item.id) {
+            await setDoc(doc(db, 'properties', item.id), item, { merge: true });
+          }
+        }
+      } else if (key === STORAGE_KEYS.RENTAL_APPLICATIONS && Array.isArray(value)) {
+        for (const item of value) {
+          if (item && item.id) {
+            await setDoc(doc(db, 'rentalApplications', item.id), item, { merge: true });
+          }
+        }
+      } else if (key === STORAGE_KEYS.LEASES && Array.isArray(value)) {
+        for (const item of value) {
+          if (item && item.id) {
+            await setDoc(doc(db, 'leases', item.id), item, { merge: true });
+          }
+        }
+      } else if (key === STORAGE_KEYS.INSPECTION_BOOKINGS && Array.isArray(value)) {
+        for (const item of value) {
+          if (item && item.id) {
+            await setDoc(doc(db, 'inspectionBookings', item.id), item, { merge: true });
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Firestore sync failed:', err);
+    }
+  }
+
+  public async pullFromFirestore(): Promise<void> {
+    try {
+      const { db } = await import('./firebase');
+      const { collection, getDocs } = await import('firebase/firestore');
+
+      // 1. Pull properties
+      try {
+        const querySnapshot = await getDocs(collection(db, 'properties'));
+        if (!querySnapshot.empty) {
+          const list: Property[] = [];
+          querySnapshot.forEach((docSnap) => {
+            list.push(docSnap.data() as Property);
+          });
+          if (list.length > 0) {
+            this.properties = list;
+            localStorage.setItem(STORAGE_KEYS.PROPERTIES, JSON.stringify(this.properties));
+          }
+        }
+      } catch (e) {
+        console.warn('Could not pull properties from Firestore:', e);
+      }
+
+      // 2. Pull rental applications
+      try {
+        const querySnapshot = await getDocs(collection(db, 'rentalApplications'));
+        if (!querySnapshot.empty) {
+          const list: RentalApplication[] = [];
+          querySnapshot.forEach((docSnap) => {
+            list.push(docSnap.data() as RentalApplication);
+          });
+          if (list.length > 0) {
+            this.rentalApplications = list;
+            localStorage.setItem(STORAGE_KEYS.RENTAL_APPLICATIONS, JSON.stringify(this.rentalApplications));
+          }
+        }
+      } catch (e) {
+        console.warn('Could not pull rentalApplications from Firestore:', e);
+      }
+
+      // 3. Pull leases
+      try {
+        const querySnapshot = await getDocs(collection(db, 'leases'));
+        if (!querySnapshot.empty) {
+          const list: LeaseAgreement[] = [];
+          querySnapshot.forEach((docSnap) => {
+            list.push(docSnap.data() as LeaseAgreement);
+          });
+          if (list.length > 0) {
+            this.leases = list;
+            localStorage.setItem(STORAGE_KEYS.LEASES, JSON.stringify(this.leases));
+          }
+        }
+      } catch (e) {
+        console.warn('Could not pull leases from Firestore:', e);
+      }
+
+      // 4. Pull inspection bookings
+      try {
+        const querySnapshot = await getDocs(collection(db, 'inspectionBookings'));
+        if (!querySnapshot.empty) {
+          const list: PropertyInspectionBooking[] = [];
+          querySnapshot.forEach((docSnap) => {
+            list.push(docSnap.data() as PropertyInspectionBooking);
+          });
+          if (list.length > 0) {
+            this.inspectionBookings = list;
+            localStorage.setItem(STORAGE_KEYS.INSPECTION_BOOKINGS, JSON.stringify(this.inspectionBookings));
+          }
+        }
+      } catch (e) {
+        console.warn('Could not pull inspectionBookings from Firestore:', e);
+      }
+
+      this.notify();
+    } catch (err) {
+      console.warn('Firestore initialization failed:', err);
     }
   }
 

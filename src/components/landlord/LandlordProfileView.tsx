@@ -12,7 +12,8 @@ import {
   CheckCircle2,
   X,
   Users,
-  Share2
+  Share2,
+  Mail,
 } from 'lucide-react';
 import { useSafeNestStore } from '../../lib/store';
 import { ShareModal } from '../common/ShareModal';
@@ -56,6 +57,13 @@ export const LandlordProfileView: React.FC<LandlordProfileViewProps> = ({
   };
 
   const menuItems = [
+    {
+      id: 'gmail-hub',
+      title: 'Gmail Message Center',
+      subtitle: 'Send official tenancy agreements & invoices',
+      icon: Mail,
+      action: () => window.dispatchEvent(new CustomEvent('safenest-navigate', { detail: 'gmail' })),
+    },
     {
       id: 'edit-profile',
       title: 'Edit Profile',

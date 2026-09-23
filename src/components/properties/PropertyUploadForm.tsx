@@ -259,6 +259,54 @@ export const PropertyUploadForm: React.FC<PropertyUploadFormProps> = ({ onSucces
     setImages(filtered);
   };
 
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleLocalFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (images.length >= 20) {
+      setError('Maximum 20 photos allowed.');
+      return;
+    }
+
+    try {
+      setIsUploading(true);
+      setError(null);
+
+      const { ref, uploadBytes, getDownloadURL } = await import('firebase/storage');
+      const { storage } = await import('../../lib/firebase');
+
+      // Create storage reference
+      const storageRef = ref(storage, `properties/${Date.now()}_${file.name}`);
+      
+      // Upload file bytes
+      const snapshot = await uploadBytes(storageRef, file);
+      
+      // Get download URL
+      const downloadUrl = await getDownloadURL(snapshot.ref);
+
+      const newImg: PropertyImage = {
+        id: `img_storage_${Date.now()}`,
+        propertyId: '',
+        url: downloadUrl,
+        isMain: images.length === 0,
+        sortOrder: images.length + 1,
+        status: isAdmin ? 'approved' : 'pending',
+        resolution: 'Uploaded File',
+        fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+        createdAt: new Date().toISOString(),
+      };
+
+      setImages([...images, newImg]);
+    } catch (err: any) {
+      console.error(err);
+      setError(`Failed to upload to Firebase Storage: ${err.message || err}`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const toggleAmenity = (item: string) => {
     setAmenities((prev) =>
       prev.includes(item) ? prev.filter((a) => a !== item) : [...prev, item]
@@ -762,6 +810,34 @@ export const PropertyUploadForm: React.FC<PropertyUploadFormProps> = ({ onSucces
                 >
                   Add
                 </button>
+              </div>
+
+              {/* Firebase Storage File Upload */}
+              <div className="mt-3 p-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-col gap-2">
+                <span className="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+                  <Upload className="w-3.5 h-3.5" />
+                  Upload Photos to Firebase Cloud Storage:
+                </span>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLocalFileUpload}
+                    disabled={isUploading}
+                    className="block w-full text-xs text-slate-500
+                      file:mr-4 file:py-1.5 file:px-3
+                      file:rounded-lg file:border-0
+                      file:text-xs file:font-semibold
+                      file:bg-emerald-600 file:text-white
+                      hover:file:bg-emerald-500
+                      disabled:opacity-50 disabled:cursor-not-allowed"
+                  />
+                  {isUploading && (
+                    <span className="text-xs text-emerald-600 font-bold animate-pulse">
+                      Uploading...
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 

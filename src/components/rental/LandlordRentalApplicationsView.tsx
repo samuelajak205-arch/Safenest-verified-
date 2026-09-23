@@ -201,7 +201,9 @@ export const LandlordRentalApplicationsView: React.FC<LandlordRentalApplications
           ) : (
             filteredApps.map((app) => {
               const isSelected = selectedApp?.id === app.id;
-              const rentRatio = (app.employmentInfo.monthlyIncome / app.rentAmount).toFixed(1);
+              const incomeNum = app.employmentInfo?.monthlyIncome ? Number(app.employmentInfo.monthlyIncome) : 0;
+              const rentNum = app.rentAmount ? Number(app.rentAmount) : 1;
+              const rentRatio = rentNum > 0 ? (incomeNum / rentNum).toFixed(1) : '0.0';
               return (
                 <div
                   key={app.id}
@@ -233,7 +235,7 @@ export const LandlordRentalApplicationsView: React.FC<LandlordRentalApplications
                     <div>
                       <span className="text-slate-400 text-[10px] block">Income vs Rent</span>
                       <span className="font-semibold text-emerald-700">
-                        {rentRatio}x (UGX {(app.employmentInfo.monthlyIncome / 1000000).toFixed(1)}M / mo)
+                        {rentRatio}x (UGX {(incomeNum / 1000000).toFixed(1)}M / mo)
                       </span>
                     </div>
                     <div>
@@ -372,7 +374,7 @@ export const LandlordRentalApplicationsView: React.FC<LandlordRentalApplications
                     <div className="p-3 bg-emerald-50/60 border border-emerald-200 rounded-2xl">
                       <span className="text-[10px] font-semibold text-emerald-700 block">Verified Net Income</span>
                       <span className="text-base font-bold text-emerald-950 font-mono">
-                        UGX {selectedApp.employmentInfo?.monthlyIncome?.toLocaleString() || '0'}
+                        UGX {selectedApp.employmentInfo?.monthlyIncome ? Number(selectedApp.employmentInfo.monthlyIncome).toLocaleString() : '0'}
                       </span>
                       <span className="text-[10px] text-emerald-600 block mt-0.5">Per month</span>
                     </div>
@@ -380,7 +382,9 @@ export const LandlordRentalApplicationsView: React.FC<LandlordRentalApplications
                     <div className="p-3 bg-blue-50/60 border border-blue-200 rounded-2xl">
                       <span className="text-[10px] font-semibold text-blue-700 block">Rent Coverage Ratio</span>
                       <span className="text-base font-bold text-blue-950">
-                        {(selectedApp.employmentInfo.monthlyIncome / selectedApp.rentAmount).toFixed(1)}x
+                        {selectedApp.employmentInfo?.monthlyIncome && selectedApp.rentAmount 
+                          ? (Number(selectedApp.employmentInfo.monthlyIncome) / selectedApp.rentAmount).toFixed(1)
+                          : '3.0'}x
                       </span>
                       <span className="text-[10px] text-blue-600 block mt-0.5">Recommended &gt; 2.5x</span>
                     </div>

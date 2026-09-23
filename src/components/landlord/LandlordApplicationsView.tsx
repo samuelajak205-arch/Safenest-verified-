@@ -279,13 +279,15 @@ export const LandlordApplicationsView: React.FC<LandlordApplicationsViewProps> =
                 <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-150">
                   <div>
                     <p className="text-slate-400 text-[10px] uppercase font-bold">Monthly income</p>
-                    <p className="font-bold text-emerald-700 mt-0.5">UGX {selectedApp.employmentInfo.monthlyIncome.toLocaleString()}</p>
+                    <p className="font-bold text-emerald-700 mt-0.5">
+                      UGX {selectedApp.employmentInfo?.monthlyIncome ? Number(selectedApp.employmentInfo.monthlyIncome).toLocaleString() : '0'}
+                    </p>
                   </div>
                   <div>
                     <p className="text-slate-400 text-[10px] uppercase font-bold">Rent Cover Ratio</p>
                     <p className="font-bold text-slate-850 mt-0.5 flex items-center gap-1">
-                      {selectedApp.employmentInfo.monthlyIncome && selectedApp.rentAmount 
-                        ? (selectedApp.employmentInfo.monthlyIncome / selectedApp.rentAmount).toFixed(1)
+                      {selectedApp.employmentInfo?.monthlyIncome && selectedApp.rentAmount 
+                        ? (Number(selectedApp.employmentInfo.monthlyIncome) / selectedApp.rentAmount).toFixed(1)
                         : '3.0'}x Income vs Rent <span className="text-emerald-600">✓</span>
                     </p>
                   </div>

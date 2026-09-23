@@ -145,7 +145,7 @@ export const UserApplicationsView: React.FC<UserApplicationsViewProps> = ({ onBr
                     {app.propertyTitle}
                   </h3>
                   <p className="text-xs text-emerald-700 font-bold mt-0.5">
-                    UGX {app.rentAmount?.toLocaleString()} / mo
+                    UGX {app.rentAmount ? Number(app.rentAmount).toLocaleString() : '0'} / mo
                   </p>
                 </div>
                 {getStatusBadge(app.status)}
@@ -193,7 +193,7 @@ export const UserApplicationsView: React.FC<UserApplicationsViewProps> = ({ onBr
                 </h3>
               </div>
               <p className="text-xs text-emerald-700 font-bold mt-1">
-                Rent: UGX {selectedApp.rentAmount?.toLocaleString()} / mo
+                Rent: UGX {selectedApp.rentAmount ? Number(selectedApp.rentAmount).toLocaleString() : '0'} / mo
               </p>
               <div className="mt-2">{getStatusBadge(selectedApp.status)}</div>
             </div>

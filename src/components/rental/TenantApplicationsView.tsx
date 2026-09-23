@@ -292,7 +292,7 @@ export const TenantApplicationsView: React.FC<TenantApplicationsViewProps> = ({
                     <div>
                       <span className="text-slate-400 block text-[10px]">Monthly Income</span>
                       <span className="font-bold text-slate-800">
-                        UGX {selectedApp.employmentInfo?.monthlyIncome?.toLocaleString() || '0'}
+                        UGX {selectedApp.employmentInfo?.monthlyIncome ? Number(selectedApp.employmentInfo.monthlyIncome).toLocaleString() : '0'}
                       </span>
                     </div>
                     <div>
