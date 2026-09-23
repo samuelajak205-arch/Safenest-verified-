@@ -23,6 +23,18 @@ provider.addScope('https://www.googleapis.com/auth/gmail.modify');
 provider.addScope('https://www.googleapis.com/auth/gmail.readonly');
 provider.addScope('https://www.googleapis.com/auth/gmail.send');
 
+// Google Contacts / People API scopes
+provider.addScope('https://www.googleapis.com/auth/contacts');
+provider.addScope('https://www.googleapis.com/auth/contacts.other.readonly');
+provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+provider.addScope('https://www.googleapis.com/auth/directory.readonly');
+provider.addScope('https://www.googleapis.com/auth/user.addresses.read');
+provider.addScope('https://www.googleapis.com/auth/user.birthday.read');
+provider.addScope('https://www.googleapis.com/auth/user.emails.read');
+provider.addScope('https://www.googleapis.com/auth/user.gender.read');
+provider.addScope('https://www.googleapis.com/auth/user.organization.read');
+provider.addScope('https://www.googleapis.com/auth/user.phonenumbers.read');
+
 let isSigningIn = false;
 // In-memory token caching per guidelines (do not store in localStorage)
 let cachedAccessToken: string | null = null;

@@ -65,6 +65,13 @@ export const UserProfileView: React.FC<UserProfileViewProps> = ({
       action: () => window.dispatchEvent(new CustomEvent('safenest-navigate', { detail: 'gmail' })),
     },
     {
+      id: 'contacts-hub',
+      title: 'Google Contacts Sync',
+      subtitle: 'View and manage lease contacts',
+      icon: Users,
+      action: () => window.dispatchEvent(new CustomEvent('safenest-navigate', { detail: 'contacts' })),
+    },
+    {
       id: 'edit-profile',
       title: 'Edit Profile',
       subtitle: 'Personal info, budget & preferences',

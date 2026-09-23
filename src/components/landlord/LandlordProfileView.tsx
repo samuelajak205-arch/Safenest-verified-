@@ -65,6 +65,13 @@ export const LandlordProfileView: React.FC<LandlordProfileViewProps> = ({
       action: () => window.dispatchEvent(new CustomEvent('safenest-navigate', { detail: 'gmail' })),
     },
     {
+      id: 'contacts-hub',
+      title: 'Google Contacts Sync',
+      subtitle: 'Manage tenant leads & active contacts',
+      icon: Users,
+      action: () => window.dispatchEvent(new CustomEvent('safenest-navigate', { detail: 'contacts' })),
+    },
+    {
       id: 'edit-profile',
       title: 'Edit Profile',
       subtitle: 'Business profiles & payout methods',

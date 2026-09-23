@@ -11,6 +11,7 @@ import { PropertyDetailModal } from './components/browse/PropertyDetailModal';
 import { PropertyUploadForm } from './components/properties/PropertyUploadForm';
 import { GoogleDriveHub } from './components/drive/GoogleDriveHub';
 import { GmailHub } from './components/gmail/GmailHub';
+import { ContactsHub } from './components/contacts/ContactsHub';
 import { ManualRentLedgerView } from './components/rental/ManualRentLedgerView';
 import { InspectionChecklistView } from './components/rental/InspectionChecklistView';
 import { LeaseManagementHub } from './components/rental/LeaseManagementHub';
@@ -255,6 +256,8 @@ export default function App() {
           {currentView === 'drive' && <GoogleDriveHub />}
 
           {currentView === 'gmail' && <GmailHub />}
+
+          {currentView === 'contacts' && <ContactsHub />}
 
           {(currentView === 'settings' || currentView === 'admin-settings' || currentView === 'landlord-settings' || currentView === 'user-settings') && (
             <SettingsView onNavigate={handleNavigate} onOpenBecomeLandlord={() => {}} />
